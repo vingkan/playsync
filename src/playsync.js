@@ -40,7 +40,7 @@ function Gamepad(inGamepadData) {
 					db.ref(`_playsync/live/${gameCode}/feed`).push({
 						type: 'internal',
 						name: 'gamepadJoined',
-						timestamp: Firebase.ServerValue.TIMESTAMP,
+						timestamp: firebase.database.ServerValue.TIMESTAMP,
 						gamepad: gamepadData,
 						user: userData
 					}).then((done) => {
@@ -55,23 +55,22 @@ function Gamepad(inGamepadData) {
 				db.ref(`_playsync/live/${gameCode}/feed`).push({
 					type: 'gamepad',
 					name: eventName,
-					timestamp: Firebase.ServerValue.TIMESTAMP,
+					timestamp: firebase.database.ServerValue.TIMESTAMP,
 					event: eventData,
 					gamepad: gamepadData,
 					user: userData
 				}).then((done) => {
-					let pathPieces = done.path.pieces_;
+					let pathPieces = done.path.n;
       				let pushCode = pathPieces[pathPieces.length - 1];
 					let respRef = db.ref(`_playsync/live/${gameCode}/responses/${pushCode}`);
 					respRef.on('value', (snap) => {
 						let val = snap.val() || {};
-						if (val) {
+						if (val._responded) {
 							respRef.off();
 							resolve(val);
 						}
 					});
 				}).catch(reject);
-				resolve(true);
 			});
 		}
 
@@ -135,6 +134,7 @@ function Platform(inPlatformData) {
 						user: val.user
 					};
 					let respondFn = (response) => {
+						response._responded = true;
 						let pushCode = snap.key;
 						let respRef = db.ref(`_playsync/live/${gameCode}/responses/${pushCode}`);
 						respRef.set(response);

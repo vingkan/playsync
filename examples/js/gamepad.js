@@ -5,48 +5,38 @@ const FIREBASE_CONFIG = {
   projectId: "playsyncjs"
 }
 
-// const PlaySync = {
-// 	Gamepad: () => ({
-// 		type = 'slider'
-// 	} = {}) => ({
-// 		type
-// 	})
-// }
-
-let gamecode = document.getElementById('gamecode');
-// let gamepad = PlaySync.Gamepad({type: 'slider'});
-// gamepad.setFirebase(FIREBASE_CONFIG);
-
+let gamepad = PlaySync.Gamepad({type: 'slider'});
 
 function GamePadApp() {
+	gamepad.setFirebase(FIREBASE_CONFIG);
 
-	gamecode.value = 'GSX-672'; // test 
-
-	gamecode.addEventListener('keyup', function(event) {
-		if (event.keyCode === 13) { 
-			// users presses enter key and submits a game code
-			console.log(gamecode.value);
-
+	let out = {
+		connect: () => {
+			let gamecode = document.getElementById("gamecode");
+			gamepad.connect(gamecode.value).then(function(platformData) {
+				gamepad.login().then(function(userData) {
+					init();
+				});
+			});
 		}
-	});
+	}
 
+	return out;
 }
 function init() {
 	const elements = document.querySelectorAll('.input_button').forEach((el) => {
 		el.addEventListener('click', function(e) {
 			let eventData = {
-				value: parseInt(el.getAttribute("value"))
+				value: el.getAttribute("value")
 			}
-
-			console.log(el.getAttribute("value"))
-			// gamepad.emit(entry.name, eventData).then(function(response) {
-			// 	console.log(`Value was ${response.confirmed ? 'valid' : 'invalid'}.`);
-			// }).catch(function(error) {
-			//   console.error(error);
-			// });
+			// console.log(el.getAttribute("value"))
+			gamepad.emit(el.getAttribute("name"), eventData).then(function(response) {
+				console.log(`Value was ${response.confirmed ? 'valid' : 'invalid'}.`);
+			}).catch(function(error) {
+			  console.error(error);
+			});
 		});
 	});
 }
 
-
-let pad = GamePadApp();
+let app = GamePadApp();
