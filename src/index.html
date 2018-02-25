@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PlaySync</title>
+	<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+	<script type="text/javascript" src="playsync.js"></script>
+</head>
+<body>
+	<h1>PlaySync</h1>
+	<script type="text/javascript">
+		
+		let gamepad = PlaySync.Gamepad({type: 'slider'});
+		gamepad.setFirebase({
+			apiKey: "AIzaSyCAsvN-ORJN5cSK9I9YtLnZr9bQW0BwjgM",
+			authDomain: "playsyncjs.firebaseapp.com",
+			databaseURL: "https://playsyncjs.firebaseio.com",
+			projectId: "playsyncjs"
+		});
+
+	</script>
+</body>
+</html>
