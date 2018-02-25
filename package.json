@@ -18,5 +18,8 @@
   "homepage": "https://github.com/vingkan/playsync#readme",
   "devDependencies": {
     "jasmine": "^3.0.0"
+  },
+  "dependencies": {
+    "firebase": "^4.10.1"
   }
 }

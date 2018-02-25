@@ -10,7 +10,7 @@ describe("PlatForm", function() {
 
     it("should be able to recieve 'Gampad joins event'", function() {
         gamepad.emit('eventName', 5).then((response) => {
-            expect(response.confirmed).toEqual(true);
+            expect(response._confirmed).toEqual(true);
         });
         expect().toBeFalsy();
 
@@ -39,3 +39,4 @@ describe("PlatForm", function() {
         expect().toEqual();
     });
 });
+
