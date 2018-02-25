@@ -16,6 +16,9 @@
 			databaseURL: "https://playsyncjs.firebaseio.com",
 			projectId: "playsyncjs"
 		});
+		gamepad.login().then((user) => {
+			console.log(user);
+		});
 
 	</script>
 </body>
