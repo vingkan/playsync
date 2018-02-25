@@ -1,5 +1,7 @@
 (function() {
 
+	const CAME_ALIVE = Date.now();
+
 	function Gamepad(inGamepadData) {
 
 		const gamepadData = inGamepadData;
@@ -27,18 +29,11 @@
 				});
 			},
 
-			login: () => {
+			login: (forceLogin) => {
 				return new Promise((resolve, reject) => {
-					const provider = new firebase.auth.GoogleAuthProvider();
-					FirebaseApp.auth().signInWithPopup(provider).then((data) => {
-						const result = data.user;
-						const authData = {
-							userid: result.uid,
-							name: result.displayName,
-							email: result.email,
-							image: result.photoURL
-						}
-						userData = authData;
+					let savedUserStr = localStorage.getItem('playsync_user');
+					if (savedUserStr && !forceLogin) {
+						userData = JSON.parse(savedUserStr);
 						db.ref(`_playsync/live/${gameCode}/feed`).push({
 							type: 'internal',
 							name: 'gamepadJoined',
@@ -46,9 +41,32 @@
 							gamepad: gamepadData,
 							user: userData
 						}).then((done) => {
-							resolve(authData);
+							resolve(userData);
 						}).catch(reject);
-					}).catch(reject);
+					} else {
+						const provider = new firebase.auth.GoogleAuthProvider();
+						FirebaseApp.auth().signInWithPopup(provider).then((data) => {
+							const result = data.user;
+							const authData = {
+								userid: result.uid,
+								name: result.displayName,
+								email: result.email,
+								image: result.photoURL
+							}
+							userData = authData;
+							let userStr = JSON.stringify(authData);
+							localStorage.setItem('playsync_user', userStr);
+							db.ref(`_playsync/live/${gameCode}/feed`).push({
+								type: 'internal',
+								name: 'gamepadJoined',
+								timestamp: firebase.database.ServerValue.TIMESTAMP,
+								gamepad: gamepadData,
+								user: userData
+							}).then((done) => {
+								resolve(userData);
+							}).catch(reject);
+						}).catch(reject);
+					}
 				});
 			},
 
@@ -82,9 +100,24 @@
 
 	}
 
+	const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVXYZ';
+
 	function getPrettyCode() {
 		let time = Date.now();
-		let code = `{time}`;
+		let key = `${time}`;
+		let sidx = 8;
+		let offset = 0;
+		let chars = '';
+		let nums = key.substr(-4);
+		let nidx = parseInt(nums);
+		while (offset < 4) {
+			let idx = sidx + offset;
+			let aidx = parseInt(key[idx]);
+			nidx = (nidx + aidx) % ALPHABET.length;
+			chars += ALPHABET[nidx];
+			offset++;
+		}
+		let code = `${chars}-${nums}`;
 		return code;
 	}
 
@@ -104,10 +137,20 @@
 
 			getCode: () => {
 				return new Promise((resolve, reject) => {
-					gameCode = getPrettyCode();
-					db.ref(`_playsync/live/${gameCode}/platform`).set(platformData).then((done) => {
-						resolve(gameCode);
-					}).catch(reject);
+					let codeStr = localStorage.getItem('playsync_code');
+					if (codeStr) {
+						gameCode = codeStr;
+					} else {
+						gameCode = getPrettyCode();
+						localStorage.setItem('playsync_code', gameCode);
+					}
+					if (db) {
+						db.ref(`_playsync/live/${gameCode}/platform`).set(platformData).then((done) => {
+							resolve(gameCode);
+						}).catch(reject);
+					} else {
+						reject('Firebase connection not initialized.');
+					}
 				});
 			},
 
@@ -115,7 +158,9 @@
 				let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
-					if (val.type === 'internal' && val.name === eventName) {
+					// Known issue: server timestamp may not match client timestamp
+					let recent = val.timestamp >= CAME_ALIVE;
+					if (recent && val.type === 'internal' && val.name === eventName) {
 						switch (eventName) {
 							case 'gamepadJoined':
 								callback(val.gamepad, val.user);
@@ -129,7 +174,9 @@
 				let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
-					if (val.type === 'gamepad' && val.name === eventName) {
+					// Known issue: server timestamp may not match client timestamp
+					let recent = val.timestamp >= CAME_ALIVE;
+					if (recent && val.type === 'gamepad' && val.name === eventName) {
 						let allData = {
 							event: val.event,
 							gamepad: val.gamepad,

@@ -111,5 +111,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 		The community can contribute by:
 		- Creating and sharing  fun and useful controller layouts
 		- Integrating PlaySync with popular web based games
+		- Write and re-write unit and integration tests
 		- Reporting bugs in the platform
 
