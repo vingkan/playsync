@@ -137,7 +137,13 @@
 
 			getCode: () => {
 				return new Promise((resolve, reject) => {
-					gameCode = getPrettyCode();
+					let codeStr = localStorage.getItem('playsync_code');
+					if (codeStr) {
+						gameCode = codeStr;
+					} else {
+						gameCode = getPrettyCode();
+						localStorage.setItem('playsync_code', gameCode);
+					}
 					if (db) {
 						db.ref(`_playsync/live/${gameCode}/platform`).set(platformData).then((done) => {
 							resolve(gameCode);
