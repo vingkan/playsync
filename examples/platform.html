@@ -3,10 +3,48 @@
 <head>
 	<title>Playsync</title>
 	<link rel="stylesheet" type="text/css" href="./css/bulma.css">
+	<link rel="stylesheet" type="text/css" href="./css/gamepad.css">
+
+	<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+	<script type="text/javascript" src="../src/playsync.js"></script>
+	<script type="text/javascript" src="./js/platform.js"></script>
 </head>
 <body>
 	<div class="has-text-centered">
 		<h1 class="is-size-1">Playsync</h1>
+
+<!-- 		<div class="field is-grouped is-grouped-centered">
+			<p class="control">
+				<input id="gamecode" class="input" type="text" placeholder="Game Code" value="">
+			</p>
+			<p class="control">
+				<a class="button is-info" onclick="app.connect()">Submit</a>
+			</p>
+		</div> -->
+		<p class="is-large inline">Game Code:</p>
+		<p id="gamecode" class="is-large"></p>
+
 	</div>
+	<br>
+	<div class="box has-text-centered">
+		<br><br>
+		<div class="columns">
+			<div class="column">
+				<p>Player 1</p>
+				<a class="button is-rounded input_y input_button" name="Y" value="Y">Y</a>
+				<a class="button is-rounded input_a input_button" name="A" value="A">A</a>
+				<a class="button is-rounded input_d input_button" name="D" value="D">D</a>
+				<a class="button is-rounded input_x input_button" name="X" value="X">X</a>
+			</div>
+			<div class="column">
+				<p>Player 2</p>
+				<a class="button is-rounded input_y input_button" name="Y" value="Y">Y</a>
+				<a class="button is-rounded input_a input_button" name="A" value="A">A</a>
+				<a class="button is-rounded input_d input_button" name="D" value="D">D</a>
+				<a class="button is-rounded input_x input_button" name="X" value="X">X</a>
+			</div>
+		</div>
+	</div>
+
 </body>
 </html>
