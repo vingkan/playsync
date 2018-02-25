@@ -30,6 +30,9 @@ function init() {
 		respond({
 			confirmed: positive
 		});
+		let load_ico = document.querySelector('div.player1 > a.input_a');
+		load_ico.classList.add('is-loading');
+		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
 	});
 	platform.on('D', function(data, respond) {
 		// data = {event, user, gamepad}
@@ -38,6 +41,9 @@ function init() {
 		respond({
 			confirmed: positive
 		});
+		let load_ico = document.querySelector('div.player1 > a.input_d');
+		load_ico.classList.add('is-loading');
+		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
 	});
 	platform.on('X', function(data, respond) {
 		// data = {event, user, gamepad}
@@ -46,6 +52,9 @@ function init() {
 		respond({
 			confirmed: positive
 		});
+		let load_ico = document.querySelector('div.player1 > a.input_x');
+		load_ico.classList.add('is-loading');
+		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
 	});
 	platform.on('Y', function(data, respond) {
 		// data = {event, user, gamepad}
@@ -54,6 +63,9 @@ function init() {
 		respond({
 			confirmed: positive
 		});
+		let load_ico = document.querySelector('div.player1 > a.input_y');
+		load_ico.classList.add('is-loading');
+		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
 	});
-	
+
 }
