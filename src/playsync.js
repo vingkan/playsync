@@ -134,7 +134,9 @@
 				let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
-					if (val.type === 'internal' && val.name === eventName) {
+					// Known issue: server timestamp may not match client timestamp
+					let recent = val.timestamp >= Date.now();
+					if (recent && val.type === 'internal' && val.name === eventName) {
 						switch (eventName) {
 							case 'gamepadJoined':
 								callback(val.gamepad, val.user);
@@ -148,7 +150,9 @@
 				let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
-					if (val.type === 'gamepad' && val.name === eventName) {
+					// Known issue: server timestamp may not match client timestamp
+					let recent = val.timestamp >= Date.now();
+					if (recent && val.type === 'gamepad' && val.name === eventName) {
 						let allData = {
 							event: val.event,
 							gamepad: val.gamepad,
