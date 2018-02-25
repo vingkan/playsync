@@ -79,7 +79,72 @@ function Gamepad(inGamepadData) {
 
 }
 
-function Platform() {
+function getPrettyCode() {
+	let time = Date.now();
+	let code = `{time}`;
+	return code;
+}
+
+function Platform(inPlatformData) {
+
+	const platformData = inPlatformData;
+	let gameCode;
+	let FirebaseApp;
+	let db;
+
+	const platform = {
+
+		setFirebase: (config) => {
+			FirebaseApp = firebase.initializeApp(config, `Gamepad ${Date.now()}`);
+			db = FirebaseApp.database();
+		},
+
+		getCode: () => {
+			return new Promise((resolve, reject) => {
+				gameCode = getPrettyCode();
+				db.ref(`_playsync/live/${gameCode}/platform`).set(platformData).then((done) => {
+					resolve(gameCode);
+				}).catch(reject);
+			});
+		},
+
+		when: (eventName, callback) => {
+			let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
+			feedRef.on('child_added', (snap) => {
+				let val = snap.val() || {};
+				if (val.type === 'internal' && val.name === eventName) {
+					switch (eventName) {
+						case 'gamepadJoined':
+							callback(val.gamepad, val.user);
+							break;
+					}
+				}
+			});
+		},
+
+		on: (eventName, callback) => {
+			let feedRef = db.ref(`_playsync/live/${gameCode}/feed`);
+			feedRef.on('child_added', (snap) => {
+				let val = snap.val() || {};
+				if (val.type === 'gamepad' && val.name === eventName) {
+					let allData = {
+						event: val.event,
+						gamepad: val.gamepad,
+						user: val.user
+					};
+					let respondFn = (response) => {
+						let pushCode = snap.key;
+						let respRef = db.ref(`_playsync/live/${gameCode}/responses/${pushCode}`);
+						respRef.set(response);
+					};
+					callback(allData, respondFn);
+				}
+			});
+		}
+
+	};
+
+	return platform;
 
 }
 
