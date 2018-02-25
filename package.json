@@ -1,0 +1,22 @@
+{
+  "name": "playsync",
+  "version": "1.0.0",
+  "description": "Front end Javascript library for using mobile phones as computer game controllers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vingkan/playsync.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vingkan/playsync/issues"
+  },
+  "homepage": "https://github.com/vingkan/playsync#readme",
+  "devDependencies": {
+    "jasmine": "^3.0.0"
+  }
+}
