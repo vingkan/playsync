@@ -36,12 +36,12 @@ function Gamepad(inGamepadData) {
 					}
 					userData = authData;
 					db.ref(`_playsync/live/${gameCode}/feed`).push({
-						_type: 'internal',
-						_name: 'gamepadJoined',
-						_timestamp: Firebase.ServerValue.TIMESTAMP
-						_gamepad: gamepadData,
-						_user: userData
-					}).then((success) => {
+						type: 'internal',
+						name: 'gamepadJoined',
+						timestamp: Firebase.ServerValue.TIMESTAMP,
+						gamepad: gamepadData,
+						user: userData
+					}).then((done) => {
 						resolve(authData);
 					}).catch(reject);
 				}).catch(reject);
@@ -50,15 +50,25 @@ function Gamepad(inGamepadData) {
 
 		emit: (eventName, eventData) => {
 			return new Promise((resolve, reject) => {
-				/*db.ref(`_playsync/live/${gameCode}/feed`).push({
-					_type: 'gamepad',
-					_name: eventName,
-					_timestamp: Firebase.ServerValue.TIMESTAMP
-					_gamepad: gamepadData,
-					_user: userData
-				}).then((success) => {
-					resolve(authData);
-				}).catch(reject);*/
+				db.ref(`_playsync/live/${gameCode}/feed`).push({
+					type: 'gamepad',
+					name: eventName,
+					timestamp: Firebase.ServerValue.TIMESTAMP,
+					event: eventData,
+					gamepad: gamepadData,
+					user: userData
+				}).then((done) => {
+					let pathPieces = done.path.pieces_;
+      				let pushCode = pathPieces[pathPieces.length - 1];
+					let respRef = db.ref(`_playsync/live/${gameCode}/responses/${pushCode}`);
+					respRef.on('value', (snap) => {
+						let val = snap.val() || {};
+						if (val) {
+							respRef.off();
+							resolve(val);
+						}
+					});
+				}).catch(reject);
 				resolve(true);
 			});
 		}
