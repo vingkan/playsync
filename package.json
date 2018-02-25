@@ -4,7 +4,7 @@
   "description": "Front end Javascript library for using mobile phones as computer game controllers",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
