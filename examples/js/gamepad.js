@@ -15,6 +15,7 @@ function GamePadApp() {
 			let gamecode = document.getElementById("gamecode");
 			gamepad.connect(gamecode.value).then(function(platformData) {
 				gamepad.login().then(function(userData) {
+					console.log("game joined", userData);
 					init();
 				});
 			});
@@ -31,7 +32,8 @@ function init() {
 			}
 			// console.log(el.getAttribute("value"))
 			gamepad.emit(el.getAttribute("name"), eventData).then(function(response) {
-				console.log(`Value was ${response.confirmed ? 'valid' : 'invalid'}.`);
+				console.log(`Value ${el.getAttribute('value')} sent`);
+				// console.log(`Value was ${response.confirmed ? 'valid' : 'invalid'}.`);
 			}).catch(function(error) {
 			  console.error(error);
 			});

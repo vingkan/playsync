@@ -1,5 +1,7 @@
 (function() {
 
+	const CAME_ALIVE = Date.now();
+
 	function Gamepad(inGamepadData) {
 
 		const gamepadData = inGamepadData;
@@ -135,7 +137,7 @@
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
 					// Known issue: server timestamp may not match client timestamp
-					let recent = val.timestamp >= Date.now();
+					let recent = val.timestamp >= CAME_ALIVE;
 					if (recent && val.type === 'internal' && val.name === eventName) {
 						switch (eventName) {
 							case 'gamepadJoined':
@@ -151,7 +153,7 @@
 				feedRef.on('child_added', (snap) => {
 					let val = snap.val() || {};
 					// Known issue: server timestamp may not match client timestamp
-					let recent = val.timestamp >= Date.now();
+					let recent = val.timestamp >= CAME_ALIVE;
 					if (recent && val.type === 'gamepad' && val.name === eventName) {
 						let allData = {
 							event: val.event,

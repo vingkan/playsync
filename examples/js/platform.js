@@ -5,6 +5,9 @@ const FIREBASE_CONFIG = {
 	projectId: "playsyncjs"
 }
 
+let usercount = 0;
+let usermap = {};
+
 const platform = PlaySync.Platform({
 	name: 'Rocket Launcher'
 });
@@ -18,54 +21,75 @@ platform.getCode().then((gameCode) => {
 
 // Callback to set up platform logic after 
 function init() {
-	
+
 	platform.when('gamepadJoined', function(gamepad, user) {
-		console.log(`${user.name} joined with ${gamepad.type}.`);
+		console.log(gamepad, user);
+		if (!usermap.hasOwnProperty(user.userid)) {
+			usercount+=1;
+			usermap[user.userid] = "player" + usercount;
+		}
+		console.log(`${user.name} joined as ${usermap[user.userid]} with ${gamepad.type}.`);
 	});
 	
 	platform.on('A', function(data, respond) {
 		// data = {event, user, gamepad}
-		console.log(`${data.user.name} emitted ${data.event.value} from ${data.gamepad.type}.`);
+		let known = usermap.hasOwnProperty(data.user.userid);
+		let player = known ? usermap[data.user.userid] : "Unknown Player";
+		console.log(`${data.user.name}, ${player} emitted ${data.event.value} from ${data.gamepad.type}.`);
 		let positive = data.event.value > 0 ? true : false;
 		respond({
 			confirmed: positive
 		});
-		let load_ico = document.querySelector('div.player1 > a.input_a');
-		load_ico.classList.add('is-loading');
-		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		if (known) {
+			let load_ico = document.querySelector(`div.${player} > a.input_a`);
+			load_ico.classList.add('is-loading');
+			setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		}
 	});
 	platform.on('D', function(data, respond) {
 		// data = {event, user, gamepad}
-		console.log(`${data.user.name} emitted ${data.event.value} from ${data.gamepad.type}.`);
+		let known = usermap.hasOwnProperty(data.user.userid);
+		let player = known ? usermap[data.user.userid] : "Unknown Player";
+		console.log(`${data.user.name}, ${player} emitted ${data.event.value} from ${data.gamepad.type}.`);
 		let positive = data.event.value > 0 ? true : false;
 		respond({
 			confirmed: positive
 		});
-		let load_ico = document.querySelector('div.player1 > a.input_d');
-		load_ico.classList.add('is-loading');
-		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		if (known) {
+			let load_ico = document.querySelector(`div.${player} > a.input_d`);
+			load_ico.classList.add('is-loading');
+			setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		}
 	});
 	platform.on('X', function(data, respond) {
 		// data = {event, user, gamepad}
-		console.log(`${data.user.name} emitted ${data.event.value} from ${data.gamepad.type}.`);
+		let known = usermap.hasOwnProperty(data.user.userid);
+		let player = known ? usermap[data.user.userid] : "Unknown Player";
+		console.log(`${data.user.name}, ${player} emitted ${data.event.value} from ${data.gamepad.type}.`);
 		let positive = data.event.value > 0 ? true : false;
 		respond({
 			confirmed: positive
 		});
-		let load_ico = document.querySelector('div.player1 > a.input_x');
-		load_ico.classList.add('is-loading');
-		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		if (known) {
+			let load_ico = document.querySelector(`div.${player} > a.input_x`);
+			load_ico.classList.add('is-loading');
+			setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		}
 	});
 	platform.on('Y', function(data, respond) {
 		// data = {event, user, gamepad}
-		console.log(`${data.user.name} emitted ${data.event.value} from ${data.gamepad.type}.`);
+		let known = usermap.hasOwnProperty(data.user.userid);
+		let player = known ? usermap[data.user.userid] : "Unknown Player";
+		console.log(`${data.user.name}, ${player} emitted ${data.event.value} from ${data.gamepad.type}.`);
 		let positive = data.event.value > 0 ? true : false;
 		respond({
 			confirmed: positive
 		});
-		let load_ico = document.querySelector('div.player1 > a.input_y');
-		load_ico.classList.add('is-loading');
-		setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		if (known) {
+			let load_ico = document.querySelector(`div.${player} > a.input_y`);
+			load_ico.classList.add('is-loading');
+			setTimeout(function(){ load_ico.classList.remove('is-loading'); }, 100);
+		}
 	});
 
 }
