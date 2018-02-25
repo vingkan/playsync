@@ -3,6 +3,7 @@ function Gamepad(inGamepadData) {
 	const gamepadData = inGamepadData;
 	let userData;
 	let platformData;
+	let gameCode;
 	let FirebaseApp;
 	let db;
 
@@ -13,7 +14,8 @@ function Gamepad(inGamepadData) {
 			db = FirebaseApp.database();
 		},
 
-		connect: (gameCode) => {
+		connect: (inGameCode) => {
+			gameCode = inGameCode;
 			return new Promise((resolve, reject) => {
 				db.ref(`_playsync/live/${gameCode}/platform`).once('value', (snap) => {
 					let val = snap.val() || {};
