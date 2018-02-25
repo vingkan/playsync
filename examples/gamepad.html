@@ -8,27 +8,33 @@
 <body>
 	<div class="has-text-centered">
 		<h1 class="is-size-1">Playsync</h1>
-		<div class="columns">
-			<div class="column"></div>
-			<div class="control column is-half">
-				<input class="input" type="text" placeholder="Game Code">
-			</div>
-			<div class="column"></div>
-		</div>
-	</div>
 
+		<div class="field is-grouped is-grouped-centered">
+			<p class="control">
+				<input id="gamecode" class="input" type="text" placeholder="Game Code">
+			</p>
+			<p class="control">
+				<a class="button is-info">Submit</a>
+			</p>
+		</div>
+
+	</div>
+	<br>
 	<div class="box has-text-centered">
-		<a class="button is-rounded is-size-1 input_y">Y</a>
+		<a class="button is-rounded is-size-1 input_y input_button" name="Y" value="Y">Y</a>
 		<br><br>
 		<div class="columns">
 			<div class="column">
-				<a class="button is-rounded is-size-1 input_a">A</a>
+				<a class="button is-rounded is-size-1 input_a input_button" name="A" value="A">A</a>
 			</div>
 			<div class="column">
-				<a class="button is-rounded is-size-1 input_d">D</a>
+				<a class="button is-rounded is-size-1 input_d input_button" name="D" value="D">D</a>
 			</div>
 		</div>
-		<a class="button is-rounded is-size-1 input_x">X</a>
+		<a class="button is-rounded is-size-1 input_x input_button" name="X" value="X">X</a>
 	</div>
+	<!-- Scripts -->
+	<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+	<script type="text/javascript" src="./js/gamepad.js"></script>
 </body>
 </html>

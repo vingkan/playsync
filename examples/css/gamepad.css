@@ -1,19 +1,19 @@
+.input_button {
+	color: white;
+}
+
 .input_a {
 	background-color: blue;
-	color: white;
 }
 
 .input_d {
 	background-color: red;
-	color: white;
 }
 
 .input_y {
 	background-color: yellow;
-	color: white;
 }
 
 .input_x {	
 	background-color: green;
-	color: white;	
 }
